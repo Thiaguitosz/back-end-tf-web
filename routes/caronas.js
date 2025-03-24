@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     res.json(caronas.rows);
   } catch (err) {
     console.error('Erro ao buscar caronas:', err);
-    res.status(500).send('Erro ao buscar caronas');
+    res.status(500).send(`Erro ao buscar caronas: ${err}`);
   }
 });
 
