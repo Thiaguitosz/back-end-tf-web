@@ -13,9 +13,7 @@ function verificarAutenticacao(req, res, next) {
       return res.status(401).json({ message: "Usuário não Autenticado" }).end();
     }
 
-    console.log("Decoded JWT:", decoded); // Log do conteúdo do token
-
-    const tipoDeUsuario = decoded.tipo || 'default';
+    const tipoDeUsuario = decoded.tipo || 'comum';
     req.userId = decoded.id;
     req.userEmail = decoded.email;
     req.userType = tipoDeUsuario;
