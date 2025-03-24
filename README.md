@@ -1,3 +1,54 @@
+# 🚗 IFMOBI - Tecnologias Backend
+
+## 📚 Visão Geral das Tecnologias
+
+### 🖥️ Linguagem de Programação
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow?logo=javascript)
+![Node.js](https://img.shields.io/badge/Node.js-v18+-green?logo=nodedotjs)
+
+### 🌐 Framework Web
+![Express.js](https://img.shields.io/badge/Express.js-4.x-black?logo=express)
+
+### 💾 Banco de Dados
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue?logo=postgresql)
+- Biblioteca de conexão: `pg` (node-postgres)
+
+### 🔐 Autenticação e Segurança
+![JWT](https://img.shields.io/badge/JWT-Autenticação-pink?logo=jsonwebtokens)
+![Bcrypt](https://img.shields.io/badge/Bcrypt-Criptografia-lightblue)
+
+## 🛠️ Principais Ferramentas e Bibliotecas
+
+| Categoria | Ferramenta | Função |
+|-----------|------------|--------|
+| Autenticação | `jsonwebtoken` | Geração de tokens |
+| Criptografia | `bcrypt` | Hash de senhas |
+| Ambiente | `dotenv` | Variáveis de ambiente |
+
+## 🔒 Funcionalidades de Segurança
+
+- Autenticação baseada em token JWT
+- Hash de senhas com salt
+- Middleware de verificação de autenticação
+- Rotas protegidas para administradores
+- Validação de entrada de dados
+
+## 📡 Arquitetura
+
+- API RESTful
+- Modularização de rotas
+- Separação de responsabilidades
+- Tratamento de erros consistente
+
+## 📝 Variáveis de Ambiente
+
+Arquivo `.env` com:
+```
+PORT=3000
+DATABASE_URL=postgres://usuario:senha@localhost:5432/carona_db
+SECRET_TOKEN=sua_chave_secreta_jwt
+```
+
 # IFMobi - API Routes
 ### URL_API: https://back-end-tf-web-alpha.vercel.app/
 
