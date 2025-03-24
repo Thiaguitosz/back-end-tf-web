@@ -1,107 +1,38 @@
-# trabalhofinal-backend
-# Thiago Araújo Miranda
+## Rotas de Administração
 
-# API de Caronas
+### **[GET] /usuarios**
+**Descrição:** Lista todos os usuários.
 
-## Rotas
+### **[GET] /caronas**
+**Descrição:** Lista todas as caronas.
 
-### **Usuário**
+### **[DELETE] /usuarios/:id**
+**Descrição:** Deleta um usuário pelo ID.
 
-**[POST] /usuario**
+### **[DELETE] /caronas/:id**
+**Descrição:** Deleta uma carona pelo ID.
 
-Descrição: Cadastra um usuário.
+### **[PUT] /usuarios/:id**
+**Descrição:** Edita um usuário pelo ID.
 
-Body:
+**Body:**
 ```json
 {
-  "nome": "João Silva",
-  "email": "joao@email.com",
-  "senha": "123456"
+  "nome": "Nome do usuário",
+  "email": "email@exemplo.com",
+  "telefone": "(00) 00000-0000"
 }
 ```
 
----
+### **[PUT] /caronas/:id**
+**Descrição:** Edita uma carona pelo ID.
 
-**[POST] /login**
-
-Descrição: Realiza o login do usuário.
-
-Body:
+**Body:**
 ```json
 {
-  "email": "joao@email.com",
-  "senha": "123456"
+  "motorista": "Nome do motorista",
+  "local_partida": "Local de partida",
+  "destino": "Destino",
+  "vagas_disponiveis": 3,
+  "status": "ativo"
 }
-```
-
----
-
-**[GET] /usuario/{id}**
-
-Descrição: Obtém informações de um usuário pelo ID.
-
----
-
-### **Carona**
-
-**[POST] /carona**
-
-Descrição: Cria uma nova carona.
-
-Body:
-```json
-{
-  "origem": "Campus IFNMG",
-  "destino": "Centro de Salinas",
-  "horario": "18:00",
-  "vagas": 3
-}
-```
-
----
-
-**[GET] /carona**
-
-Descrição: Lista todas as caronas disponíveis.
-
----
-
-**[GET] /carona/{id}**
-
-Descrição: Obtém detalhes de uma carona específica pelo ID.
-
----
-
-**[PUT] /carona/{id}**
-
-Descrição: Atualiza os dados de uma carona existente.
-
-Body:
-```json
-{
-  "origem": "Campus IFNMG",
-  "destino": "Rodoviária",
-  "horario": "19:00",
-  "vagas": 2
-}
-```
-
----
-
-**[DELETE] /carona/{id}**
-
-Descrição: Remove uma carona pelo ID.
-
----
-
-### **Administração**
-
-**[GET] /admin/usuarios**
-
-Descrição: Obtém a lista de todos os usuários cadastrados. (Requer permissão de administrador)
-
----
-
-**[DELETE] /admin/usuario/{id}**
-
-Descrição: Remove um usuário pelo ID. (Requer permissão de administrador)
