@@ -7,7 +7,15 @@ const router = Router();
 // Rota para listar caronas
 router.get('/', async (req, res) => {
   try {
-    // JOIN correto com a tabela de usuários usando usuario_id
+    // Primeiro, atualizar status das caronas expiradas
+    await pool.query(`
+      UPDATE caronas 
+      SET status = 'Inativa' 
+      WHERE LOWER(status) = LOWER($1) 
+      AND horario < (NOW() AT TIME ZONE 'America/Sao_Paulo')
+    `, ['Ativa']);
+
+    // Então buscar as caronas ativas atualizadas
     const caronas = await pool.query(
       `SELECT c.*, u.nome as nome_motorista 
        FROM caronas c
@@ -152,7 +160,7 @@ router.delete('/:id', verificarAutenticacao, async (req, res) => {
     // Atualizar status da carona para "Cancelada" em vez de excluir completamente
     const { rows } = await pool.query(
       `UPDATE caronas 
-       SET status = 'Cancelada' 
+       SET status = 'Inativa' 
        WHERE id = $1 
        RETURNING *`,
       [id]
