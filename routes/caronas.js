@@ -12,8 +12,8 @@ router.get('/', async (req, res) => {
       UPDATE caronas 
       SET status = 'Inativa' 
       WHERE LOWER(status) = $1 
-      AND horario < (NOW() AT TIME ZONE 'America/Sao_Paulo')
-    `, ['Ativa']);
+      AND horario < (NOW() AT TIME ZONE 'America/Sao_Paulo')::timestamp
+    `, ['ativa']);    
 
     // Então buscar as caronas ativas atualizadas
     const caronas = await pool.query(
