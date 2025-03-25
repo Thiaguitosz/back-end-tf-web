@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     await pool.query(`
       UPDATE caronas 
       SET status = 'Inativa' 
-      WHERE LOWER(status) = ($1) 
+      WHERE LOWER(status) = $1 
       AND horario < (NOW() AT TIME ZONE 'America/Sao_Paulo')
     `, ['Ativa']);
 
