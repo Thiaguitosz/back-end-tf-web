@@ -86,4 +86,162 @@ router.post('/', verificarAutenticacao, async (req, res) => {
   }
 });
 
+router.put('/:id', verificarAutenticacao, async (req, res) => {
+  const { id } = req.params;
+  const { local_partida, horario, destino, vagas_disponiveis } = req.body;
+
+  // Validação dos campos obrigatórios
+  if (!local_partida || !horario || !destino || !vagas_disponiveis) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+  }
+
+  // Validação de número de vagas
+  if (isNaN(vagas_disponiveis) || vagas_disponiveis <= 0) {
+    return res.status(400).json({ error: 'Número de vagas deve ser um valor positivo.' });
+  }
+
+  try {
+    // Primeiro, verificar se a carona pertence ao usuário
+    const verificaPropriedade = await pool.query(
+      'SELECT * FROM caronas WHERE id = $1 AND usuario_id = $2 AND LOWER(status) = LOWER($3)',
+      [id, req.userId, 'Ativa']
+    );
+
+    if (verificaPropriedade.rows.length === 0) {
+      return res.status(403).json({ error: 'Você não tem permissão para editar esta carona.' });
+    }
+
+    // Formatar horário
+    const horarioFormatado = new Date(horario);
+    const horarioSemFuso = horarioFormatado.toISOString().split('T')[0] + ' ' + horarioFormatado.toISOString().split('T')[1].split('.')[0];
+
+    // Atualizar a carona
+    const { rows } = await pool.query(
+      `UPDATE caronas 
+       SET local_partida = $1, 
+           horario = $2, 
+           destino = $3, 
+           vagas_disponiveis = $4 
+       WHERE id = $5 
+       RETURNING *`,
+      [local_partida, horarioSemFuso, destino, vagas_disponiveis, id]
+    );
+    
+    res.json(rows[0]);
+  } catch (error) {
+    console.error('Erro ao editar carona:', error);
+    res.status(500).json({ error: 'Erro ao editar carona.' });
+  }
+});
+
+// Nova rota para excluir carona
+router.delete('/:id', verificarAutenticacao, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Primeiro, verificar se a carona pertence ao usuário e está ativa
+    const verificaPropriedade = await pool.query(
+      'SELECT * FROM caronas WHERE id = $1 AND usuario_id = $2 AND LOWER(status) = LOWER($3)',
+      [id, req.userId, 'Ativa']
+    );
+
+    if (verificaPropriedade.rows.length === 0) {
+      return res.status(403).json({ error: 'Você não tem permissão para excluir esta carona.' });
+    }
+
+    // Atualizar status da carona para "Cancelada" em vez de excluir completamente
+    const { rows } = await pool.query(
+      `UPDATE caronas 
+       SET status = 'Cancelada' 
+       WHERE id = $1 
+       RETURNING *`,
+      [id]
+    );
+    
+    res.json(rows[0]);
+  } catch (error) {
+    console.error('Erro ao excluir carona:', error);
+    res.status(500).json({ error: 'Erro ao excluir carona.' });
+  }
+});
+
+router.put('/:id', verificarAutenticacao, async (req, res) => {
+  const { id } = req.params;
+  const { local_partida, horario, destino, vagas_disponiveis } = req.body;
+
+  // Validação dos campos obrigatórios
+  if (!local_partida || !horario || !destino || !vagas_disponiveis) {
+    return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+  }
+
+  // Validação de número de vagas
+  if (isNaN(vagas_disponiveis) || vagas_disponiveis <= 0) {
+    return res.status(400).json({ error: 'Número de vagas deve ser um valor positivo.' });
+  }
+
+  try {
+    // Primeiro, verificar se a carona pertence ao usuário
+    const verificaPropriedade = await pool.query(
+      'SELECT * FROM caronas WHERE id = $1 AND usuario_id = $2 AND LOWER(status) = LOWER($3)',
+      [id, req.userId, 'Ativa']
+    );
+
+    if (verificaPropriedade.rows.length === 0) {
+      return res.status(403).json({ error: 'Você não tem permissão para editar esta carona.' });
+    }
+
+    // Formatar horário
+    const horarioFormatado = new Date(horario);
+    const horarioSemFuso = horarioFormatado.toISOString().split('T')[0] + ' ' + horarioFormatado.toISOString().split('T')[1].split('.')[0];
+
+    // Atualizar a carona
+    const { rows } = await pool.query(
+      `UPDATE caronas 
+       SET local_partida = $1, 
+           horario = $2, 
+           destino = $3, 
+           vagas_disponiveis = $4 
+       WHERE id = $5 
+       RETURNING *`,
+      [local_partida, horarioSemFuso, destino, vagas_disponiveis, id]
+    );
+    
+    res.json(rows[0]);
+  } catch (error) {
+    console.error('Erro ao editar carona:', error);
+    res.status(500).json({ error: 'Erro ao editar carona.' });
+  }
+});
+
+// Nova rota para excluir carona
+router.delete('/:id', verificarAutenticacao, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Primeiro, verificar se a carona pertence ao usuário e está ativa
+    const verificaPropriedade = await pool.query(
+      'SELECT * FROM caronas WHERE id = $1 AND usuario_id = $2 AND LOWER(status) = LOWER($3)',
+      [id, req.userId, 'Ativa']
+    );
+
+    if (verificaPropriedade.rows.length === 0) {
+      return res.status(403).json({ error: 'Você não tem permissão para excluir esta carona.' });
+    }
+
+    // Atualizar status da carona para "Cancelada" em vez de excluir completamente
+    const { rows } = await pool.query(
+      `UPDATE caronas 
+       SET status = 'Cancelada' 
+       WHERE id = $1 
+       RETURNING *`,
+      [id]
+    );
+    
+    res.json(rows[0]);
+  } catch (error) {
+    console.error('Erro ao excluir carona:', error);
+    res.status(500).json({ error: 'Erro ao excluir carona.' });
+  }
+});
+
 export default router;
