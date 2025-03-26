@@ -16,7 +16,7 @@ router.get('/validate-token', (req, res, next) => {
   // Use the existing authentication middleware
   verificarAutenticacao(req, res, () => {
     // If the middleware calls next(), it means the token is valid
-    return res.status(200).json({ valid: true });
+    return res.status(200).json({ valid: true, isAdmin: req.userType === 'admin' });
   });
 });
 
