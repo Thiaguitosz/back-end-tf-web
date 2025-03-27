@@ -5,6 +5,7 @@ import verificarAutenticacao from "../middlewares/autenticacao.js";
 const router = Router();
 
 // Rota para listar caronas
+// Rota para listar caronas
 router.get('/', async (req, res) => {
   try {
     // Primeiro, atualizar status das caronas expiradas
@@ -17,7 +18,7 @@ router.get('/', async (req, res) => {
 
     // Então buscar as caronas ativas atualizadas
     const caronas = await pool.query(
-      `SELECT c.*, u.nome as nome_motorista 
+      `SELECT c.*, u.nome as nome_motorista, u.telefone as telefone_motorista 
        FROM caronas c
        LEFT JOIN usuarios u ON c.usuario_id = u.id
        WHERE LOWER(c.status) = LOWER($1)`,
