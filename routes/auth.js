@@ -83,4 +83,61 @@ router.get("/userType", verificarAutenticacao, (req, res) => {
   res.status(200).json({ tipo: req.userType });
 });
 
+router.put('/edit-profile', verificarAutenticacao, async (req, res) => {
+  const userId = req.userId; // Obtido do middleware de autenticação
+  const { nome, email, senha, telefone } = req.body;
+
+  // Verifica se pelo menos um campo foi enviado para atualização
+  if (!nome && !email && !senha && !telefone) {
+    return res.status(400).json({ error: 'Nenhum dado para atualizar foi fornecido.' });
+  }
+
+  try {
+    // Primeiro, busca o usuário atual para manter os dados que não foram alterados
+    const { rows: currentUserRows } = await pool.query(
+      'SELECT nome, email, telefone FROM usuarios WHERE id = $1',
+      [userId]
+    );
+
+    if (currentUserRows.length === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    // Prepara os dados para atualização, usando os valores atuais se não forem fornecidos
+    const updateNome = nome || currentUserRows[0].nome;
+    const updateEmail = email || currentUserRows[0].email;
+    const updateTelefone = telefone || currentUserRows[0].telefone;
+
+    // Hash da senha, se fornecida
+    const hashedSenha = senha ? await hashPassword(senha) : null;
+
+    // Constrói a query de atualização
+    let query = 'UPDATE usuarios SET nome = $1, email = $2, telefone = $3';
+    let queryParams = [updateNome, updateEmail, updateTelefone];
+
+    // Adiciona atualização de senha, se fornecida
+    if (hashedSenha) {
+      query += ', senha = $4 WHERE id = $5';
+      queryParams.push(hashedSenha, userId);
+    } else {
+      query += ' WHERE id = $4';
+      queryParams.push(userId);
+    }
+
+    // Executa a atualização
+    await pool.query(query, queryParams);
+
+    return res.status(200).json({ message: 'Perfil atualizado com sucesso.' });
+  } catch (error) {
+    console.error('Erro na edição de perfil:', error);
+    
+    // Verifica se é um erro de violação de restrição única (ex: email duplicado)
+    if (error.code === '23505') {
+      return res.status(409).json({ error: 'Email já está em uso.' });
+    }
+
+    return res.status(500).json({ error: 'Erro ao atualizar o perfil.' });
+  }
+});
+
 export default router;
