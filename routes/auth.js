@@ -140,4 +140,26 @@ router.put('/edit-profile', verificarAutenticacao, async (req, res) => {
   }
 });
 
+router.get('/profile', verificarAutenticacao, async (req, res) => {
+  const userId = req.userId; // Obtido do middleware de autenticação
+
+  try {
+    // Busca os dados do usuário (excluindo a senha)
+    const { rows } = await pool.query(
+      'SELECT nome, email, telefone FROM usuarios WHERE id = $1', 
+      [userId]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    // Retorna os dados do perfil
+    return res.status(200).json(rows[0]);
+  } catch (error) {
+    console.error('Erro ao buscar dados do perfil:', error);
+    return res.status(500).json({ error: 'Erro ao buscar dados do perfil.' });
+  }
+});
+
 export default router;
