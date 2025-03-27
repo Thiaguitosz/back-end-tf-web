@@ -122,8 +122,8 @@ router.put('/caronas/:id', verificarAutenticacao, verificarAdmin, async (req, re
 
         // Atualizar a carona com o ID do motorista
         const { rowCount } = await pool.query(
-            'UPDATE caronas SET usuario_id = $1, local_partida = $2, destino = $3, vagas_disponiveis = $4, status = $5 WHERE id = $6',
-            [motoristaId, local_partida, destino, vagas_disponiveis, status, id]
+            'UPDATE caronas SET usuario_id = $1, local_partida = $2, destino = $3, vagas_disponiveis = $4, status = $5, horario = $6 WHERE id = $7',
+            [motoristaId, local_partida, destino, vagas_disponiveis, status, req.body.horario, id]
         );
 
         if (rowCount === 0) {
